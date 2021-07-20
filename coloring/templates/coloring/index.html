@@ -8,6 +8,13 @@
 
 	<script type="text/javascript" src="{% static 'coloring/vendors/jquery/jquery-3.3.1.min.js' %}"></script>
 	<script type="text/javascript" src="{% static 'coloring/vendors/paper/paper-full.min.js' %}"></script>
+	<link rel="stylesheet" media="screen" type="text/css" href="css/colorpicker.css" />
+<script type="text/javascript" src="js/colorpicker.js"></script>
+
+	<!-- Load the Paper.js library -->
+	<script type="text/javascript" src="js/paper.js"></script>
+	<!-- Define inlined JavaScript -->
+	<script type="text/javascript"></script>
 
 	<style type="text/css">
 		#color-palette {
@@ -35,6 +42,19 @@
 		    margin-right: auto;
 		    display: block;
 		}
+
+		#myTools {
+				height:250px;
+				width:100px;
+		    margin-bottom: 150px;
+		    display: block;
+				background-color: yellow;
+		}
+
+
+/*#color-picker {
+  border: 3px solid rgba(15, 15, 15, 0.2);
+} */
 	</style>
 
 	<script type="text/javascript" canvas="canvas">
@@ -47,6 +67,7 @@
 				lastClicked: null,
 				filePath: '/static/coloring/images/mandala-freepik.svg'
 			};
+
 
 			// color palette
 			var cp = {
@@ -65,6 +86,22 @@
 				    		// only color in with the most-recent color.
 				        hit.item.fillColor = cp.history[cp.history.length - 1];
 				    }
+				}
+			}
+
+			function myCustomDraw() {
+				var tool = new paper.Tool();
+
+				tool.onMouseDown = function (event) {
+						var hit = pencil.item.hitTest(event.point, { tolerance: 10, fill: true });
+						if (hit) {
+								// Color pallette keeps track of the full history of colors, though we
+								// only color in with the most-recent color.
+									var path = new Path();
+									path.strokeColor = 'black';
+									var start = new Point(100, 100);
+									path.moveTo(start)
+						}
 				}
 			}
 
@@ -112,14 +149,67 @@
 				});
 			}
 
+
 			// Set up the mandala interactivity.
 			init(true);
-		}
+/*			 */
+							}
+
 	</script>
 </head>
 <body>
 
 	<canvas id="myCanvas" width="750px" height="750px"></canvas>
+	<div style = "position:absolute; left: 1350px; top:50px;">
+		<div id="MyTools"></div>
+		<input type="image" src="{% static 'coloring/images/house.png' %}" name="house" class="btTxt submit" id="house" width="50" height="50"/>
+				<input type="image" src="{% static 'coloring/images/colorfill.png' %}" name="colorfill" class="btTxt submit" id="colorfill" width="60" height="50"/>
+						<input type= "image" src="{% static 'coloring/images/pencil.png' %}" id="pencil" type="button"  value="clickme" onmousedrag="penciler();" width="50" height="50"/>
+						<script>
+		function penciler () {
+
+function onMouseDrag(event) {
+  // Do something else
+  console.log('Mouse dragged!');
+}
+
+var myPath;
+
+function onMouseDown(event) {
+	myPath = new Path();
+	myPath.strokeColor = 'black';
+}
+
+function onMouseDrag(event) {
+	myPath.add(event.point);
+}
+
+function onMouseUp(event) {
+	var myCircle = new Path.Circle({
+		center: event.point,
+		radius: 10
+	});
+	myCircle.strokeColor = 'black';
+	myCircle.fillColor = 'white';
+}
+}
+
+						</script>
+								<input type="image" src="{% static 'coloring/images/paintbrush.png' %}" name="paintbrush" class="btTxt submit" id="paintbrush" width="50" height="50"/>
+										<input type="image" src="{% static 'coloring/images/paintholder.png' %}" name="paintholder" class="btTxt submit" id="paintholder" onclick=  "$('#paintholder').ColorPicker({flat: true});" width="50" height="50"/>
+
+										<div style="text-align : right; top:300px;">
+											<input type="text" id="hex">
+											<input type="color" id="color">
+</div>
+
+								<script src="script.js"></script>
+
+
+	</div>
 	<div id="color-palette"></div>
+<canvas id="myCanvas" resize></canvas>
+
 </body>
+
 </html>
